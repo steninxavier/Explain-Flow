@@ -2,6 +2,7 @@ node_modules/
 .next/
 out/
 output/*.mp4
+output/*.png
 !output/.gitkeep
 public/narration/*.mp3
 public/narration/*.json
