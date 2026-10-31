@@ -1,0 +1,37 @@
+{
+  "name": "explainflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "render:fixture": "node --env-file=.env.local --import tsx src/scripts/render-fixture.ts",
+    "verify:fixture": "node --env-file=.env.local --import tsx src/scripts/verify-fixture-render.ts",
+    "narration:fixture": "node --env-file=.env.local --import tsx src/scripts/generate-fixture-narration.ts",
+    "narration:ai-tokens": "node --env-file=.env.local --import tsx src/scripts/generate-ai-tokens-narration.ts",
+    "render:ai-tokens": "node --env-file=.env.local --import tsx src/scripts/render-ai-tokens.ts",
+    "verify:ai-tokens": "node --env-file=.env.local --import tsx src/scripts/verify-ai-tokens-render.ts",
+    "narration:explainflow": "node --env-file=.env.local --import tsx src/scripts/generate-explainflow-narration.ts",
+    "render:explainflow": "node --env-file=.env.local --import tsx src/scripts/render-explainflow.ts",
+    "verify:explainflow": "node --env-file=.env.local --import tsx src/scripts/verify-explainflow-render.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

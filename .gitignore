@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+output/*.mp4
+!output/.gitkeep
+public/narration/*.mp3
+public/narration/*.json
+!public/narration/.gitkeep
+.env.local
+.env*.local
+.npm-config/
+.npm-cache/
+*.tsbuildinfo
+npm-debug.log*
