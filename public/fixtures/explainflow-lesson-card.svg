@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Sample creator lesson card">
+  <rect width="320" height="220" rx="28" fill="#E4F1EC"/>
+  <circle cx="252" cy="46" r="31" fill="#F3C56E" opacity=".88"/>
+  <path d="M0 176c53-37 94 11 142-35 43-42 82-4 178-59v138H0Z" fill="#2D7668"/>
+  <path d="M0 193c57-31 98 8 147-20 48-28 88 4 173-32" fill="none" stroke="#F8F4EC" stroke-width="7" stroke-linecap="round" stroke-dasharray="12 12" opacity=".88"/>
+  <rect x="28" y="31" width="124" height="15" rx="7.5" fill="#17233A" opacity=".88"/>
+  <rect x="28" y="57" width="88" height="9" rx="4.5" fill="#17233A" opacity=".28"/>
+  <rect x="28" y="79" width="110" height="9" rx="4.5" fill="#17233A" opacity=".18"/>
+</svg>

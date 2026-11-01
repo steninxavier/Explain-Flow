@@ -13,7 +13,7 @@ export const storyPlanSchema = z
     schemaVersion: z.literal("1"),
     title: z.string().trim().min(3).max(100),
     language: z.enum(["en", "de"]),
-    targetDurationSeconds: z.union([z.literal(30), z.literal(60), z.literal(90)]),
+    targetDurationSeconds: z.literal(30),
     script: z.string().trim().min(20).max(5000),
     scenes: z
       .array(
@@ -69,6 +69,7 @@ export const storyPlanSchema = z
 
 export const brandSettingsSchema = z.object({
   colors: z.array(z.string().regex(/^#[0-9A-Fa-f]{6}$/)).min(2).max(5),
+  name: z.string().trim().min(1).max(80).optional(),
   logoSrc: z.string().min(1).optional()
 });
 

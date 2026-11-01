@@ -2,6 +2,7 @@ import React from "react";
 import {
   AbsoluteFill,
   Audio,
+  Img,
   Sequence,
   interpolate,
   staticFile,
@@ -9,6 +10,12 @@ import {
   useVideoConfig
 } from "remotion";
 import type { CaptionCue, SceneTiming } from "../lib/caption-timing";
+import {
+  assertCreatorAssetSources,
+  resolveCreatorAssetSources,
+  type CreatorAssetSources
+} from "../lib/creator-assets";
+import { formatSceneCounter } from "../lib/scene-counter";
 import type { BrandSettings, StoryPlan } from "../lib/story-plan";
 import { AiTokenSceneTransition, AiTokensStoryIllustration } from "./AiTokensStoryIllustration";
 import { ExplainFlowSceneTransition, ExplainFlowStoryIllustration } from "./ExplainFlowStoryIllustration";
@@ -22,6 +29,7 @@ export type ExplainerTemplateProps = {
   narrationAudioSrc?: string;
   captionCues?: CaptionCue[];
   sceneTimings?: SceneTiming[];
+  assetSources?: CreatorAssetSources;
   visualTheme?: VisualTheme;
 };
 
@@ -34,6 +42,90 @@ const sceneLabels: Record<string, string> = {
   "plan-review": "Plan and review",
   "approve-render": "Render",
   "preview-next": "Preview and download"
+};
+
+const toRenderableAssetSource = (source: string) => (
+  /^(?:https?:|data:|blob:)/i.test(source)
+    ? source
+    : staticFile(source.replace(/^[\\/]+/, ""))
+);
+
+const CreatorBrandIdentity: React.FC<{
+  name: string;
+  logoSrc?: string;
+}> = ({ name, logoSrc }) => (
+  <>
+    {logoSrc ? (
+      <span
+        style={{
+          width: 28,
+          height: 28,
+          display: "grid",
+          placeItems: "center",
+          overflow: "hidden",
+          borderRadius: 8,
+          background: "rgba(255,255,255,0.76)",
+          border: "1px solid rgba(23,35,58,0.10)"
+        }}
+      >
+        <Img
+          src={toRenderableAssetSource(logoSrc)}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </span>
+    ) : null}
+    <span style={{ opacity: 0.62, maxWidth: 250, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      {name}
+    </span>
+  </>
+);
+
+const SceneCreatorAssets: React.FC<{
+  assetIds: readonly string[];
+  assetSources?: CreatorAssetSources;
+  primary: string;
+  accent: string;
+}> = ({ assetIds, assetSources, primary, accent }) => {
+  if (assetIds.length === 0) return null;
+
+  const assets = resolveCreatorAssetSources(assetIds, assetSources).slice(0, 3);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        right: 54,
+        bottom: 108,
+        display: "flex",
+        alignItems: "flex-end",
+        gap: 10,
+        zIndex: 7
+      }}
+    >
+      {assets.map((asset, index) => (
+        <div
+          key={asset.id}
+          style={{
+            width: 104,
+            height: 76,
+            padding: 5,
+            boxSizing: "border-box",
+            overflow: "hidden",
+            borderRadius: 15,
+            background: "rgba(255,255,255,0.82)",
+            border: `1px solid ${accent}44`,
+            boxShadow: "0 12px 25px rgba(23,35,58,0.12)",
+            transform: `translateY(${index * 5}px) rotate(${(index - 1) * 3}deg)`
+          }}
+        >
+          <Img
+            src={toRenderableAssetSource(asset.source)}
+            style={{ width: "100%", height: "100%", borderRadius: 10, objectFit: "cover", background: primary }}
+          />
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const SceneTransition: React.FC<{ sceneIndex: number; frame: number; accent: string; primary: string; visualTheme: VisualTheme }> = ({ sceneIndex, frame, accent, primary, visualTheme }) => {
@@ -115,10 +207,13 @@ const SceneTransition: React.FC<{ sceneIndex: number; frame: number; accent: str
 const ExplainerScene: React.FC<{
   scene: StoryPlan["scenes"][number];
   sceneIndex: number;
+  sceneCount: number;
   sceneDurationInFrames: number;
   brand: BrandSettings;
+  brandName: string;
+  assetSources?: CreatorAssetSources;
   visualTheme: VisualTheme;
-}> = ({ scene, sceneIndex, sceneDurationInFrames, brand, visualTheme }) => {
+}> = ({ scene, sceneIndex, sceneCount, sceneDurationInFrames, brand, brandName, assetSources, visualTheme }) => {
   const frame = useCurrentFrame();
   const labelOpacity = interpolate(frame, [8, 20, 62, 88], [0, 0.75, 0.75, 0], {
     extrapolateLeft: "clamp",
@@ -146,6 +241,12 @@ const ExplainerScene: React.FC<{
           <RainStoryIllustration sceneId={scene.id} primary={primary} accent={accent} frame={frame} />
         )}
       </div>
+      <SceneCreatorAssets
+        assetIds={scene.visual.assetIds}
+        assetSources={assetSources}
+        primary={primary}
+        accent={accent}
+      />
       <SceneTransition sceneIndex={sceneIndex} frame={frame} accent={accent} primary={primary} visualTheme={visualTheme} />
 
       <div
@@ -165,9 +266,9 @@ const ExplainerScene: React.FC<{
           textTransform: "uppercase"
         }}
       >
-        <span style={{ opacity: 0.62 }}>ExplainFlow</span>
+        <CreatorBrandIdentity name={brandName} logoSrc={brand.logoSrc} />
         <span style={{ width: 4, height: 4, borderRadius: "50%", background: accent }} />
-        <span>{String(sceneIndex + 1).padStart(2, "0")} / 04</span>
+        <span>{formatSceneCounter(sceneIndex, sceneCount)}</span>
         <span style={{ color: accent }}>{sceneLabels[scene.id] ?? scene.caption}</span>
       </div>
     </AbsoluteFill>
@@ -231,9 +332,14 @@ export const ExplainerTemplate: React.FC<ExplainerTemplateProps> = ({
   narrationAudioSrc,
   captionCues = [],
   sceneTimings,
+  assetSources,
   visualTheme = "rain"
 }) => {
   const { fps } = useVideoConfig();
+  storyPlan.scenes.forEach((scene) => {
+    assertCreatorAssetSources(scene.visual.assetIds, assetSources, `scene "${scene.id}"`);
+  });
+  const brandName = brand.name ?? storyPlan.title;
   let fallbackStartFrame = 0;
   const timings = storyPlan.scenes.map((scene) => {
     const durationInFrames = Math.round((scene.durationMs / 1000) * fps);
@@ -254,8 +360,11 @@ export const ExplainerTemplate: React.FC<ExplainerTemplateProps> = ({
           <ExplainerScene
             scene={scene}
             sceneIndex={index}
+            sceneCount={storyPlan.scenes.length}
             sceneDurationInFrames={timings[index].durationInFrames}
             brand={brand}
+            brandName={brandName}
+            assetSources={assetSources}
             visualTheme={visualTheme}
           />
         </Sequence>

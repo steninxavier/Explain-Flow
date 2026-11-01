@@ -1,7 +1,14 @@
 import type { BrandSettings, StoryPlan } from "./story-plan";
+import type { CreatorAssetSources } from "./creator-assets";
 
 export const explainFlowBrand: BrandSettings = {
+  name: "ExplainFlow",
+  logoSrc: "fixtures/explainflow-logo.svg",
   colors: ["#17233A", "#2D7668", "#F8F4EC"]
+};
+
+export const explainFlowAssetSources: CreatorAssetSources = {
+  "explainflow-lesson-card": "fixtures/explainflow-lesson-card.svg"
 };
 
 export const explainFlowStoryPlan: StoryPlan = {
@@ -21,7 +28,7 @@ export const explainFlowStoryPlan: StoryPlan = {
       visual: {
         template: "title",
         description: "An idea card flows into a small, personal brand kit with colour, logo, and image assets.",
-        assetIds: []
+        assetIds: ["explainflow-lesson-card"]
       }
     },
     {

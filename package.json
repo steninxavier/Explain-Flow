@@ -15,7 +15,8 @@
     "verify:ai-tokens": "node --env-file=.env.local --import tsx src/scripts/verify-ai-tokens-render.ts",
     "narration:explainflow": "node --env-file=.env.local --import tsx src/scripts/generate-explainflow-narration.ts",
     "render:explainflow": "node --env-file=.env.local --import tsx src/scripts/render-explainflow.ts",
-    "verify:explainflow": "node --env-file=.env.local --import tsx src/scripts/verify-explainflow-render.ts"
+    "verify:explainflow": "node --env-file=.env.local --import tsx src/scripts/verify-explainflow-render.ts",
+    "verify:contracts": "node --import tsx src/scripts/verify-renderer-contracts.ts"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.0",

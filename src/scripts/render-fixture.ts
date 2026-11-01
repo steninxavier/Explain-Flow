@@ -5,6 +5,7 @@ import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { buildFallbackTiming, buildSyncedTiming } from "../lib/caption-timing";
 import type { CharacterAlignment } from "../lib/narration";
+import { assertNarrationAssetPair } from "../lib/render-preflight";
 import { fixtureBrand, fixtureStoryPlan } from "../lib/story-plan.fixture";
 import { storyPlanSchema } from "../lib/story-plan";
 
@@ -21,9 +22,7 @@ async function renderFixture() {
 
   const hasNarration = existsSync(narrationPath);
   const hasAlignment = existsSync(alignmentPath);
-  if (hasNarration && !hasAlignment) {
-    throw new Error("Narration timing is missing. Run npm run narration:fixture before rendering.");
-  }
+  assertNarrationAssetPair(hasNarration, hasAlignment, "npm run narration:fixture");
 
   const timing = hasAlignment
     ? buildSyncedTiming(

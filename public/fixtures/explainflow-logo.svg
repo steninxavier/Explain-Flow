@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="ExplainFlow sample logo">
+  <rect width="120" height="120" rx="32" fill="#17233A"/>
+  <path d="M31 35h42c9 0 16 7 16 16v3c0 9-7 16-16 16H50c-7 0-12 5-12 12v3c0 7 5 12 12 12h39" fill="none" stroke="#F8F4EC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="87" cy="87" r="10" fill="#2D7668"/>
+</svg>

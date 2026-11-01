@@ -72,7 +72,7 @@ const splitSceneRanges = (storyPlan: StoryPlan, alignedText: string) => {
   });
 };
 
-const cueWords = (sceneId: string, words: TimedWord[], fps: number): CaptionCue[] => {
+const cueWords = (sceneId: string, words: TimedWord[], fps: number, totalFrames: number): CaptionCue[] => {
   const cues: CaptionCue[] = [];
   let current: TimedWord[] = [];
 
@@ -80,11 +80,16 @@ const cueWords = (sceneId: string, words: TimedWord[], fps: number): CaptionCue[
     if (current.length === 0) return;
     const first = current[0];
     const last = current.at(-1)!;
+    const startFrame = Math.min(totalFrames - 1, Math.max(0, Math.floor(first.startSeconds * fps)));
+    const requestedEndFrame = Math.max(
+      Math.ceil(last.endSeconds * fps) + 4,
+      startFrame + 1
+    );
     cues.push({
       sceneId,
       text: current.map((word) => word.text).join(" "),
-      startFrame: Math.floor(first.startSeconds * fps),
-      endFrame: Math.max(Math.ceil(last.endSeconds * fps) + 4, Math.floor(first.startSeconds * fps) + 1)
+      startFrame,
+      endFrame: Math.min(totalFrames, requestedEndFrame)
     });
     current = [];
   };
@@ -131,7 +136,9 @@ export const buildSyncedTiming = (storyPlan: StoryPlan, alignment: CharacterAlig
 
   return {
     sceneTimings,
-    captionCues: sceneWords.flatMap((wordsForScene, index) => cueWords(storyPlan.scenes[index].id, wordsForScene, fps))
+    captionCues: sceneWords.flatMap((wordsForScene, index) => (
+      cueWords(storyPlan.scenes[index].id, wordsForScene, fps, totalFrames)
+    ))
   };
 };
 

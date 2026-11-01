@@ -4,8 +4,13 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { buildFallbackTiming, buildSyncedTiming } from "../lib/caption-timing";
-import { explainFlowBrand, explainFlowStoryPlan } from "../lib/explainflow.fixture";
+import {
+  explainFlowAssetSources,
+  explainFlowBrand,
+  explainFlowStoryPlan
+} from "../lib/explainflow.fixture";
 import type { CharacterAlignment } from "../lib/narration";
+import { assertNarrationAssetPair } from "../lib/render-preflight";
 import { storyPlanSchema } from "../lib/story-plan";
 
 const projectRoot = process.cwd();
@@ -24,9 +29,7 @@ async function renderExplainFlow() {
   const hasNarration = existsSync(narrationPath);
   const hasAlignment = existsSync(alignmentPath);
   console.log(`Narration: ${hasNarration ? "found" : "not found"}; timing: ${hasAlignment ? "found" : "not found"}.`);
-  if (hasNarration && !hasAlignment) {
-    throw new Error("Narration timing is missing. Run npm run narration:explainflow before rendering.");
-  }
+  assertNarrationAssetPair(hasNarration, hasAlignment, "npm run narration:explainflow");
 
   const timing = hasAlignment
     ? buildSyncedTiming(
@@ -43,6 +46,7 @@ async function renderExplainFlow() {
   const inputProps = {
     storyPlan,
     brand: explainFlowBrand,
+    assetSources: explainFlowAssetSources,
     visualTheme: "explainflow" as const,
     ...timing,
     ...(hasNarration ? { narrationAudioSrc: "narration/explainflow-en.mp3" } : {})

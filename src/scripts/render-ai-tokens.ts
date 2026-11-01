@@ -6,6 +6,7 @@ import path from "node:path";
 import { aiTokensBrand, aiTokensStoryPlan } from "../lib/ai-tokens.fixture";
 import { buildFallbackTiming, buildSyncedTiming } from "../lib/caption-timing";
 import type { CharacterAlignment } from "../lib/narration";
+import { assertNarrationAssetPair } from "../lib/render-preflight";
 import { storyPlanSchema } from "../lib/story-plan";
 
 const projectRoot = process.cwd();
@@ -25,9 +26,7 @@ async function renderAiTokens() {
   const hasNarration = existsSync(narrationPath);
   const hasAlignment = existsSync(alignmentPath);
   console.log(`Narration: ${hasNarration ? "found" : "not found"}; timing: ${hasAlignment ? "found" : "not found"}.`);
-  if (hasNarration && !hasAlignment) {
-    throw new Error("Narration timing is missing. Run npm run narration:ai-tokens before rendering.");
-  }
+  assertNarrationAssetPair(hasNarration, hasAlignment, "npm run narration:ai-tokens");
 
   const timing = hasAlignment
     ? buildSyncedTiming(

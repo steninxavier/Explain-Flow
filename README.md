@@ -9,6 +9,7 @@ This repository begins with ExplainFlow's pipeline Prototype 0: a fixed, branded
 - A strict, reusable `StoryPlan` schema with duration and scene-order validation.
 - A 30-second German rain-formation fixture with four scenes.
 - A Remotion `ExplainerTemplate` composition: 16:9, 1280 × 720, 30 FPS, caption-led motion graphics, and creator-selected colours.
+- Renderer-level creator branding: an optional logo and required source mapping for approved per-scene assets. This is local-prototype support only; R2 uploads and user projects are not built yet.
 - An optional ElevenLabs narration adapter. It produces a local development audio fixture only when you run the narration command with your own environment variables.
 - A local MP4 render command that writes `output/how-rain-forms-visual-story-de.mp4`.
 

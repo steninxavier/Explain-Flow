@@ -1,6 +1,6 @@
 # ExplainFlow — Project Status
 
-**Last updated:** 31 October 2026<br>
+**Last updated:** 1 November 2026<br>
 **Overall status:** Pipeline prototype validated; SaaS dashboard implementation has not started.
 
 ExplainFlow is a real SaaS product concept for turning an idea or outline into a clear, branded motion-graphic explainer. The local prototype has proven the controlled video-rendering path. The user-facing product experience—accounts, projects, AI planning, review, storage, and hosted generation—remains the next implementation phase.
@@ -18,6 +18,8 @@ The project can create fixed, template-driven 30-second explainers locally. It i
 | Product, system, pipeline, API, and database designs | Complete | `PRD.md`, `SYSTEM_DESIGN.md`, `PIPELINE_TECHNICAL_DESIGN.md`, `API_DESIGN.md`, and `DATABASE_DESIGN.md` are the Version 1 design baseline. |
 | Remotion motion-graphics pipeline | Complete | Controlled 16:9, 1280 × 720, 30 FPS templates are implemented. |
 | Story-plan validation | Complete | The Zod `StoryPlan` contract checks scene order and exact total duration before rendering. |
+| Renderer correctness guards | Complete | The local verifier rejects 60/90-second Version 1 plans, mismatched narration/alignment files, and caption cues that exceed the 900-frame composition. |
+| Creator logo and scene assets | Complete for local renderer inputs | Optional logo sources and approved scene-asset source mappings now render in the composition. R2 uploads and project-owned asset records remain unimplemented. |
 | English and German example content | Complete | Local German rain, English AI tokens, and English ExplainFlow explainer fixtures are available. |
 | ElevenLabs prototype narration | Complete for local/private development | The provider generates MP3 narration with timestamp alignment using server-side environment variables. |
 | Caption-timing generation | Complete in the local pipeline | Caption cues and scene timing are derived from ElevenLabs character alignment when narration is present. |
@@ -27,6 +29,7 @@ The project can create fixed, template-driven 30-second explainers locally. It i
 
 - A static Next.js Prototype 0 status page.
 - Reusable Remotion compositions, illustrations, scene transitions, and brand-colour input.
+- Local renderer support for supplied logo and per-scene asset source mappings, with a sample logo and illustration fixture.
 - Local scripts to generate narration, render MP4 files, and verify media metadata.
 - Local narration fixtures and rendered output files.
 - No user-facing data is persisted by the current prototype.
